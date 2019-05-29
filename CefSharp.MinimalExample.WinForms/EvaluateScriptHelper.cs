@@ -23,7 +23,8 @@ namespace CefSharp.MinimalExample.WinForms
                 {
                     var success = true;
                     var logiclink = document.getElementsByClassName('link-login');
-                    logiclink[0].click();
+                    if((logiclink !=null)&&(logiclink[0]!=null))
+                        logiclink[0].click();
                     return success;
                 })();";
 
@@ -36,7 +37,7 @@ namespace CefSharp.MinimalExample.WinForms
             return (bool)response.Result;
         }
 
-        public static async Task<bool> InputGangBengKami(this IFrame frame, string kami)
+        public static async Task<bool> InputGangBengKami(this IFrame frame, string kami0, string kami1, string kami2, string kami3)
         {
             if (frame == null)
             {
@@ -67,24 +68,18 @@ namespace CefSharp.MinimalExample.WinForms
             // beware of braces in the javascript code. If reading from a file
             // it's probably safer to include tokens that can be replaced via
             // regex.
-            int index = kami.IndexOf('-');
-            index -= 4;
-            if(kami.Length-index>=19)
+            script = Regex.Replace(script, "##ID1##", kami0);
+            script = Regex.Replace(script, "##ID2##", kami1);
+            script = Regex.Replace(script, "##ID3##", kami2);
+            script = Regex.Replace(script, "##ID4##", kami3);
+
+            var response = await frame.EvaluateScriptAsync(script);
+            if (!response.Success)
             {
-                script = Regex.Replace(script, "##ID1##", kami.Substring(index+0, 4));
-                script = Regex.Replace(script, "##ID2##", kami.Substring(index + 5, 4));
-                script = Regex.Replace(script, "##ID3##", kami.Substring(index + 10, 4));
-                script = Regex.Replace(script, "##ID4##", kami.Substring(index + 15, 4));
-
-                var response = await frame.EvaluateScriptAsync(script);
-                if (!response.Success)
-                {
-                    throw new Exception(response.Message);
-                }
-
-                return (bool)response.Result;
+                throw new Exception(response.Message);
             }
-            return false;
+
+            return (bool)response.Result;
         }
 
         public static async Task<string> ReadGangBengKamiResult(this IFrame frame)

@@ -257,9 +257,48 @@ namespace CefSharp.MinimalExample.WinForms
             System.Diagnostics.Trace.WriteLine("开始京东页面");
         }
 
-        private void open_gangben_page_Click(object sender, EventArgs e)
+        private bool StringToKami4(string kami, out string kami0, out string kami1, out string kami2, out string kami3)
         {
-            browser.Load("https://coin.jd.com/#banklist");
+            bool result = true;
+            kami0 = "";
+            kami1 = "";
+            kami2 = "";
+            kami3 = "";
+
+            /*处理卡密 3种格式
+                1、3B8B-CFA6-632C-701C
+                2、卡号：8992-4276-1CBA-3848
+                3、899242761CBA3848
+            */
+
+            //3、899242761CBA3848
+            if (kami.Length == 16)
+            {
+                kami0 = kami.Substring(0, 4);
+                kami1 = kami.Substring(4, 4);
+                kami2 = kami.Substring(8, 4);
+                kami3 = kami.Substring(12, 4);
+            }
+            else
+            {
+                int k0 = kami.IndexOf('-');
+                int k1 = kami.IndexOf('-', k0 + 1);
+                int k2 = kami.IndexOf('-', k1 + 1);
+
+                if ((k0 != -1) && (k1 != -1) && (k1 != -1))
+                {
+                    kami0 = kami.Substring(k0 - 4, 4);
+                    kami1 = kami.Substring(k0 + 1, 4);
+                    kami2 = kami.Substring(k1 + 1, 4);
+                    kami3 = kami.Substring(k2 + 1, 4);
+                }
+                else
+                {
+                    MessageBox.Show("卡密格式错误");
+                    result = false;
+                }
+            }
+            return result;
         }
 
         private void GangBengBangDing(int index)
@@ -268,72 +307,76 @@ namespace CefSharp.MinimalExample.WinForms
             {
                 var frame = browser.GetFocusedFrame();
 
-                frame.InputGangBengKami(richTextBoxKaimi.Lines[index]).ContinueWith(task =>
+                string kami0, kami1, kami2, kami3;
+                if (StringToKami4(richTextBoxKaimi.Lines[index], out kami0, out kami1, out kami2, out kami3))
                 {
-                    // Now we're not on the main thread, perhaps the
-                    // Cef UI thread. It's not safe to work with
-                    // form UI controls or to block this thread.
-                    // Queue up a delegate to be executed on the
-                    // main thread.
-                    string message;
-                    if (task.Exception == null)
+                    frame.InputGangBengKami(kami0, kami1, kami2, kami3).ContinueWith(task =>
                     {
-                        if (task.Result) //立即提交 点击成功
+                        // Now we're not on the main thread, perhaps the
+                        // Cef UI thread. It's not safe to work with
+                        // form UI controls or to block this thread.
+                        // Queue up a delegate to be executed on the
+                        // main thread.
+                        string message;
+                        if (task.Exception == null)
                         {
-                            System.Threading.Thread.Sleep(1500 + (new Random().Next(300))); //延时1秒
-
-                            frame.ReadGangBengKamiResult().ContinueWith(readtask =>  //确认绑定按钮
+                            if (task.Result) //立即提交 点击成功
                             {
-                                if (readtask.Exception == null)
+                                System.Threading.Thread.Sleep(1500 + (new Random().Next(300))); //延时1秒
+
+                                frame.ReadGangBengKamiResult().ContinueWith(readtask =>  //确认绑定按钮
                                 {
-                                    message = readtask.Result;
-
-                                    // Now we're not on the main thread, perhaps the
-                                    // Cef UI thread. It's not safe to work with
-                                    // form UI controls or to block this thread.
-                                    // Queue up a delegate to be executed on the
-                                    // main thread.
-                                   
-                                    System.Threading.Thread.Sleep(500+(new Random().Next(300))); //延时1秒
-
-                                    //成功了 
-                                    if (message.IndexOf("实际到账") != -1)
+                                    if (readtask.Exception == null)
                                     {
-                                        //点击确定关闭按钮
-                                        frame.GangBengKamiOk().ContinueWith(oktask =>
+                                        message = readtask.Result;
+
+                                        // Now we're not on the main thread, perhaps the
+                                        // Cef UI thread. It's not safe to work with
+                                        // form UI controls or to block this thread.
+                                        // Queue up a delegate to be executed on the
+                                        // main thread.
+
+                                        System.Threading.Thread.Sleep(500 + (new Random().Next(300))); //延时1秒
+
+                                        //成功了 
+                                        if (message.IndexOf("实际到账") != -1)
                                         {
-                                            if (oktask.Exception == null)
+                                            //点击确定关闭按钮
+                                            frame.GangBengKamiOk().ContinueWith(oktask =>
                                             {
-                                                //oktask.Result;
+                                                if (oktask.Exception == null)
+                                                {
+                                                    //oktask.Result;
 
-                                                System.Threading.Thread.Sleep(1500+(new Random().Next(200))); //延时1秒
+                                                    System.Threading.Thread.Sleep(1500 + (new Random().Next(200))); //延时1秒
 
-                                                //更新显示
-                                                this.InvokeOnUiThreadIfRequired(() => UpdateLineState(index, message));
-                                                
-                                                GangBengNextBangDing();
-                                            }
-                                        });
+                                                    //更新显示
+                                                    this.InvokeOnUiThreadIfRequired(() => UpdateLineState(index, message));
+
+                                                    GangBengNextBangDing();
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            //更新显示
+                                            this.InvokeOnUiThreadIfRequired(() => UpdateLineState(index, message));
+                                            GangBengNextBangDing();
+                                        }
                                     }
                                     else
                                     {
-                                        //更新显示
-                                        this.InvokeOnUiThreadIfRequired(() => UpdateLineState(index, message));
-                                        GangBengNextBangDing();
-                                    }                                       
-                                }
-                                else
-                                {
-                                    message = string.Format("Script evaluation failed. {0}", readtask.Exception.Message);
-                                }
-                            });
+                                        message = string.Format("Script evaluation failed. {0}", readtask.Exception.Message);
+                                    }
+                                });
+                            }
                         }
-                    }
-                    else
-                    {
-                        message = string.Format("Script evaluation failed. {0}", task.Exception.Message);
-                    }
-                });
+                        else
+                        {
+                            message = string.Format("Script evaluation failed. {0}", task.Exception.Message);
+                        }
+                    });
+                }
             }
         }
 
@@ -347,7 +390,7 @@ namespace CefSharp.MinimalExample.WinForms
         {
             //打开钢镚页面
             page_isloading = true;
-            browser.Load("https://coin.jd.com/#banklist");
+            browser.Load("https://coin.jd.com/#banklist"); 
             while (page_isloading)
                 System.Threading.Thread.Sleep(1000);
 
