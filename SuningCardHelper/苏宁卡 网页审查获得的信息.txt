@@ -1,0 +1,103 @@
+https://ka.suning.com/mycard/query.htm  直接跳转登录界面
+
+<div class="bindCard" style="display: block;">
+
+					<form id="bind-card" autocomplete="off">
+						<dl>
+							<dt>卡号</dt>
+							<dd><input type="text" class="cardNum" name="cardNum" maxlength="16">
+							<p id="cardNum-error" class="tip-red"></p>
+							</dd>
+						</dl>
+						<dl>
+							<dt>密码</dt>
+							<dd><input type="password" class="pwd" name="pwd" maxlength="6">
+							<p id="pwd-error" class="tip-red"></p>
+							</dd>
+						</dl>
+						<div class="btn-box">
+							<a href="javascript:void(0);" class="bind-btn" target="_self">绑定</a>
+							<a href="javascript:void(0);" class="search-balance-btn" target="_self">查询余额</a>
+						</div>
+					</form>
+				</div>
+
+var inputdlg = document.getElementsByClassName("bindCard");
+if((inputdlg!=null)&&(inputdlg[0]!=null))
+{
+	var inputcardnum = inputdlg[0].getElementsByClassName("cardNum");
+	if((inputcardnum!=null)&&(inputcardnum[0]!=null))
+	{
+		inputcardnum[0].value = "8600010075931226";
+	}
+
+	var inputpwd = inputdlg[0].getElementsByClassName("pwd");
+	if((inputpwd!=null)&&(inputpwd[0]!=null))
+	{
+		inputpwd[0].value = "726082";
+	}
+
+	var bangdingbtn = inputdlg[0].getElementsByClassName("bind-btn");
+	if((bangdingbtn!=null)&&(bangdingbtn[0]!=null))
+		bangdingbtn[0].click();
+}
+
+//确定对话框
+<div class="pop-tpl">
+	<div class="ajax-result">
+		<a href="javascript:void(0);" class="cross" target="_self">×</a>
+		
+		<i class="tip-ok-32"></i>
+		
+		<p class="msg">苏宁卡绑定后将只能被本账户使用，无法再次绑定到其他账户使用!确认绑定吗？</p>
+		<div>
+			<a href="javascript:void(0);" class="ok sign-ok" target="_self">确定</a>
+			<a href="javascript:void(0);" class="cancel" target="_self">取消</a>
+		</div>
+	</div></div>
+
+var makesuredlg = document.getElementsByClassName("pop-tpl");
+if((makesuredlg!=null)&&(makesuredlg[0]!=null))
+{
+	var okbtn = makesuredlg[0].getElementsByClassName("ok sign-ok");
+	if((okbtn!=null)&&(okbtn[0]!=null))
+		okbtn[0].click();
+}
+
+<div class="ajax-result">
+		<a href="javascript:void(0);" class="cross" target="_self">×</a>
+		
+		<i class="tip-warning-32"></i>
+		
+		<p class="msg">此卡已被绑定</p>
+		<div>
+			<a href="javascript:void(0);" class="ok" target="_self">确定</a>
+		</div>
+	</div>
+
+<div class="ajax-result">
+		<a href="javascript:void(0);" class="cross" target="_self">×</a>
+		
+		<i class="tip-warning-32"></i>
+		
+		<p class="msg">卡号或密码有误</p>
+		<div>
+			<a href="javascript:void(0);" class="ok" target="_self">确定</a>
+		</div>
+	</div>
+
+//读取结果
+//此卡已被绑定
+//卡号或密码有误
+//绑定成功 自动消失
+var Message;
+var resultdlg = document.getElementsByClassName("ajax-result");
+if((resultdlg!=null)&&(resultdlg[0]!=null))
+{
+	var msgs= document.getElementsByClassName("msg");
+	Message = msgs[0].innerText;
+
+	var okbtn = resultdlg[0].getElementsByClassName("ok");
+	if((okbtn!=null)&&(okbtn[0]!=null))
+		okbtn[0].click();
+}
