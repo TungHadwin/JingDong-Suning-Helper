@@ -1,4 +1,4 @@
-﻿namespace CefSharp.MinimalExample.WinForms
+﻿namespace SuningHelper
 {
     partial class BrowserForm
     {
@@ -76,29 +76,29 @@
             // 
             // start_bangding
             // 
-            this.start_bangding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.start_bangding.Location = new System.Drawing.Point(715, 497);
+            this.start_bangding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.start_bangding.Location = new System.Drawing.Point(715, 553);
             this.start_bangding.Name = "start_bangding";
             this.start_bangding.Size = new System.Drawing.Size(222, 23);
             this.start_bangding.TabIndex = 5;
-            this.start_bangding.Text = "绑定钢镚";
+            this.start_bangding.Text = "绑定铜板";
             this.start_bangding.UseVisualStyleBackColor = true;
             this.start_bangding.Click += new System.EventHandler(this.start_bangding_Click);
             // 
             // richTextBoxKaimi
             // 
-            this.richTextBoxKaimi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxKaimi.Location = new System.Drawing.Point(715, 54);
+            this.richTextBoxKaimi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxKaimi.Location = new System.Drawing.Point(715, 193);
             this.richTextBoxKaimi.Name = "richTextBoxKaimi";
-            this.richTextBoxKaimi.Size = new System.Drawing.Size(222, 436);
+            this.richTextBoxKaimi.Size = new System.Drawing.Size(222, 354);
             this.richTextBoxKaimi.TabIndex = 4;
             this.richTextBoxKaimi.Text = "";
             this.richTextBoxKaimi.WordWrap = false;
             // 
             // open_logic_page
             // 
-            this.open_logic_page.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.open_logic_page.Location = new System.Drawing.Point(715, 25);
+            this.open_logic_page.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.open_logic_page.Location = new System.Drawing.Point(715, 164);
             this.open_logic_page.Name = "open_logic_page";
             this.open_logic_page.Size = new System.Drawing.Size(222, 23);
             this.open_logic_page.TabIndex = 2;
@@ -143,7 +143,7 @@
             // backButton
             // 
             this.backButton.Enabled = false;
-            this.backButton.Image = global::CefSharp.MinimalExample.WinForms.Properties.Resources.nav_left_green;
+            this.backButton.Image = global::SuningHelper.Properties.Resources.nav_left_green;
             this.backButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.backButton.Name = "backButton";
             this.backButton.Size = new System.Drawing.Size(56, 22);
@@ -153,7 +153,7 @@
             // forwardButton
             // 
             this.forwardButton.Enabled = false;
-            this.forwardButton.Image = global::CefSharp.MinimalExample.WinForms.Properties.Resources.nav_right_green;
+            this.forwardButton.Image = global::SuningHelper.Properties.Resources.nav_right_green;
             this.forwardButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.forwardButton.Name = "forwardButton";
             this.forwardButton.Size = new System.Drawing.Size(76, 22);

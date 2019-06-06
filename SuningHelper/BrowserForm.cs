@@ -6,11 +6,11 @@ using System;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using CefSharp.MinimalExample.WinForms.Controls;
+using SuningHelper.Controls;
 using CefSharp.WinForms;
 using CefSharp;
 
-namespace CefSharp.MinimalExample.WinForms
+namespace SuningHelper
 {
     public partial class BrowserForm : Form
     {
@@ -27,7 +27,7 @@ namespace CefSharp.MinimalExample.WinForms
             Text = "购物卡密辅助软件";
             WindowState = FormWindowState.Maximized;
 
-            browser = new ChromiumWebBrowser("https://u.jd.com/hUvc5c")  //https://coin.jd.com/#banklist  www.jd.com http://www.atool.org/canvas.php
+            browser = new ChromiumWebBrowser("https://tb.suning.com/index.htm")
             {
                 //Dock = DockStyle.Fill,
             };
@@ -74,7 +74,7 @@ namespace CefSharp.MinimalExample.WinForms
             SetCanReload(args.CanReload);
 
             this.InvokeOnUiThreadIfRequired(() => SetIsLoading(!args.CanReload));
-            
+
             page_isloading = args.IsLoading;
         }
 
@@ -86,6 +86,16 @@ namespace CefSharp.MinimalExample.WinForms
         private void OnBrowserAddressChanged(object sender, AddressChangedEventArgs args)
         {
             //this.InvokeOnUiThreadIfRequired(() => urlTextBox.Text = args.Address);
+        }
+
+        private void SetCanGoBack(bool canGoBack)
+        {
+            this.InvokeOnUiThreadIfRequired(() => backButton.Enabled = canGoBack);
+        }
+
+        private void SetCanGoForward(bool canGoForward)
+        {
+            this.InvokeOnUiThreadIfRequired(() => forwardButton.Enabled = canGoForward);
         }
 
         private void SetIsLoading(bool isLoading)
@@ -130,12 +140,6 @@ namespace CefSharp.MinimalExample.WinForms
             Close();
         }
 
-        private void SetCanGoBack(bool canGoBack)
-        {
-            this.InvokeOnUiThreadIfRequired(() => backButton.Enabled = canGoBack);
-        }
-
-        
         private void GoButtonClick(object sender, EventArgs e)
         {
             //LoadUrl(urlTextBox.Text);
@@ -144,11 +148,6 @@ namespace CefSharp.MinimalExample.WinForms
         private void BackButtonClick(object sender, EventArgs e)
         {
             browser.Back();
-        }
-
-        private void SetCanGoForward(bool canGoForward)
-        {
-            this.InvokeOnUiThreadIfRequired(() => forwardButton.Enabled = canGoForward);
         }
 
         private void ForwardButtonClick(object sender, EventArgs e)
@@ -240,8 +239,6 @@ namespace CefSharp.MinimalExample.WinForms
 
         private void open_logic_page_Click(object sender, EventArgs e)
         {
-            //browser.Load("https://passport.jd.com/new/login.aspx");
-
             var frame = browser.GetFocusedFrame();
 
             //Execute extension method
@@ -269,42 +266,33 @@ namespace CefSharp.MinimalExample.WinForms
             System.Diagnostics.Trace.WriteLine("开始京东页面");
         }
 
-        private bool StringToKami4(string kami, out string kami0, out string kami1, out string kami2, out string kami3)
+        private bool StringToTongGangString(string kami, out string tongbang)
         {
             bool result = true;
-            kami0 = "";
-            kami1 = "";
-            kami2 = "";
-            kami3 = "";
+            tongbang = "";
 
             /*处理卡密 3种格式
                 1、3B8B-CFA6-632C-701C
                 2、卡号：8992-4276-1CBA-3848
-                3、899242761CBA3848
+                3、820G0H090MY8D6AD
             */
 
-            //3、899242761CBA3848
+            //3、820G0H090MY8D6AD
             if (kami.Length == 16)
             {
-                kami0 = kami.Substring(0, 4);
-                kami1 = kami.Substring(4, 4);
-                kami2 = kami.Substring(8, 4);
-                kami3 = kami.Substring(12, 4);
+                tongbang = kami;
             }
             else
             {
-                int k0 = kami.IndexOf('-');
-                int k1 = kami.IndexOf('-', k0 + 1);
-                int k2 = kami.IndexOf('-', k1 + 1);
-
-                if ((k0 != -1) && (k1 != -1) && (k1 != -1))
+                foreach (char item in kami)
                 {
-                    kami0 = kami.Substring(k0 - 4, 4);
-                    kami1 = kami.Substring(k0 + 1, 4);
-                    kami2 = kami.Substring(k1 + 1, 4);
-                    kami3 = kami.Substring(k2 + 1, 4);
+                    if ((item >= '0' && item <= '9')|| (item >= 'a' && item <= 'z') || (item >= 'A' && item <= 'Z'))
+                    {
+                        tongbang += item;
+                    }
                 }
-                else
+
+                if (tongbang.Length!=16)
                 {
                     MessageBox.Show("卡密格式错误");
                     result = false;
@@ -313,16 +301,17 @@ namespace CefSharp.MinimalExample.WinForms
             return result;
         }
 
-        private void GangBengBangDing(int index)
+        private void TongGangBangDing(int index)
         {
             if (kami_index < richTextBoxKaimi.Lines.Length)
             {
                 var frame = browser.GetFocusedFrame();
 
-                string kami0, kami1, kami2, kami3;
-                if (StringToKami4(richTextBoxKaimi.Lines[index], out kami0, out kami1, out kami2, out kami3))
+                string tongbangcode;
+                if (StringToTongGangString(richTextBoxKaimi.Lines[index], out tongbangcode))
                 {
-                    frame.InputGangBengKami(kami0, kami1, kami2, kami3).ContinueWith(task =>
+                    //输入卡密
+                    frame.InputTongGangKami(tongbangcode).ContinueWith(task =>
                     {
                         // Now we're not on the main thread, perhaps the
                         // Cef UI thread. It's not safe to work with
@@ -336,8 +325,7 @@ namespace CefSharp.MinimalExample.WinForms
                             {
                                 System.Threading.Thread.Sleep(1500 + (new Random().Next(300))); //延时1秒
 
-                                //延时1.5秒 读取结果
-                                frame.ReadGangBengKamiResult().ContinueWith(readtask =>  
+                                frame.ReadTongGangKamiResult().ContinueWith(readtask =>  //确认绑定按钮
                                 {
                                     if (readtask.Exception == null)
                                     {
@@ -349,33 +337,27 @@ namespace CefSharp.MinimalExample.WinForms
                                         // Queue up a delegate to be executed on the
                                         // main thread.
 
-                                        System.Threading.Thread.Sleep(600 + (new Random().Next(200))); //延时1秒
+                                        System.Threading.Thread.Sleep(1200 + (new Random().Next(200))); //延时1秒
 
                                         //成功了 
-                                        if (message.IndexOf("实际到账") != -1)
-                                        {
-                                            //点击确认绑定按钮
-                                            frame.GangBengKamiOk().ContinueWith(oktask =>
-                                            {
-                                                if (oktask.Exception == null)
-                                                {
-                                                    //oktask.Result;
-                                               
-                                                    //更新显示
-                                                    this.InvokeOnUiThreadIfRequired(() => UpdateLineState(index, message));
-
-                                                    System.Threading.Thread.Sleep(1000 + (new Random().Next(200))); //延时1秒
-                                                    GangBengNextBangDing();
-                                                }
-                                            });
-                                        }
-                                        else  //失败了
+                                        if (message.IndexOf("抱歉") != -1)
                                         {
                                             //更新显示
                                             this.InvokeOnUiThreadIfRequired(() => UpdateLineState(index, message));
 
-                                            System.Threading.Thread.Sleep(1000 + (new Random().Next(200))); //延时1秒
-                                            GangBengNextBangDing();
+                                            System.Threading.Thread.Sleep(2500 + (new Random().Next(400))); //延时1秒
+                                            TongGangNextBangDing();
+                                        }
+                                        else
+                                        {
+                                            //oktask.Result;
+
+                                            //更新显示
+                                            this.InvokeOnUiThreadIfRequired(() => UpdateLineState(index, message));
+
+                                            System.Threading.Thread.Sleep(2500 + (new Random().Next(400))); //延时1秒
+                                            TongGangNextBangDing();
+                                            
                                         }
                                     }
                                     else
@@ -394,23 +376,17 @@ namespace CefSharp.MinimalExample.WinForms
             }
         }
 
-        private void GangBengNextBangDing()
+        private void TongGangNextBangDing()
         {
             //绑定下一个
-            this.InvokeOnUiThreadIfRequired(() => GangBengBangDing(++kami_index));
+            this.InvokeOnUiThreadIfRequired(() => TongGangBangDing(++kami_index));
         }
 
         private void start_bangding_Click(object sender, EventArgs e)
         {
-            //打开钢镚页面
-            page_isloading = true;
-            browser.Load("https://coin.jd.com/#banklist"); 
-            while (page_isloading)
-                System.Threading.Thread.Sleep(1000);
-
             //初始化
             kami_index = 0;
-            GangBengBangDing(kami_index);
+            TongGangBangDing(kami_index);
         }
 
         private void UpdateLineState(int index, string msg)
@@ -419,24 +395,26 @@ namespace CefSharp.MinimalExample.WinForms
             {
                 string text = richTextBoxKaimi.Lines[index]; //拿到此行文本
                 int lineFirstCharIndex = richTextBoxKaimi.GetFirstCharIndexFromLine(index);//此行第一个char的索引
-                                                                                           //System.Diagnostics.Debug.WriteLine(richTextBoxKaimi.Lines[index]);
+
                 //!!网络延迟,未知错误!!
 
-                //此卡密无效
+                //抱歉，兑换码不存在
+                //抱歉，兑换码已使用"
 
-                //"需绑定的卡密【6E4C-8CBC-7306-9004】为已绑定状态！"
+                //兑换码余额100.00\n手续费1.00\n本月已获取10次
 
-                //"面额：200 京东钢镚
-                //本月已兑换：27 次（每月免费10次）
-                //手续费：2 钢镚 手续费收取规则
-                //实际到账：198 钢镚"
+                if (msg.IndexOf("抱歉") != -1)
+                    text = richTextBoxKaimi.Lines[index] += " 失败:" + msg.Substring(msg.Length - 6, 6); // 修改此行文本
+                else if(msg.IndexOf("兑换码余额") != -1)
+                {
+                    int total = msg.IndexOf("兑换码余额") + 5;
+                    int total_end = msg.IndexOf('.', total);
+                    int n = msg.IndexOf("手续费") + 3;
+                    int n_end = msg.IndexOf('.', n);
+                    int value = Convert.ToInt32(msg.Substring(total, total_end - total)) - Convert.ToInt32(msg.Substring(n, n_end - n));
 
-                if (msg.IndexOf("已绑定") != -1)
-                    text = richTextBoxKaimi.Lines[index] += " 失败:卡密已绑定"; // + msg.Substring(7,19);  //修改此行文本
-                else if(msg.IndexOf("实际到账") != -1)
-                    text = richTextBoxKaimi.Lines[index] += (" 成功:"+ msg.Substring(msg.Length-6,6));
-                else if (msg.IndexOf("卡密无效") != -1)
-                    text = richTextBoxKaimi.Lines[index] += " 失败:卡密无效";
+                    text = richTextBoxKaimi.Lines[index] += (" 成功:" + value.ToString());
+                }  
                 else
                     text = richTextBoxKaimi.Lines[index] += " 失败:网络延迟"; 
 
