@@ -38,11 +38,13 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.backButton = new System.Windows.Forms.ToolStripButton();
             this.forwardButton = new System.Windows.Forms.ToolStripButton();
+            this.reloadButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showDevToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reloadButton = new System.Windows.Forms.ToolStripButton();
+            this.NewWindowCtrl = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
@@ -131,7 +133,9 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.backButton,
             this.forwardButton,
-            this.reloadButton});
+            this.toolStripSeparator1,
+            this.reloadButton,
+            this.NewWindowCtrl});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0);
@@ -159,6 +163,16 @@
             this.forwardButton.Size = new System.Drawing.Size(76, 22);
             this.forwardButton.Text = "Forward";
             this.forwardButton.Click += new System.EventHandler(this.ForwardButtonClick);
+            // 
+            // reloadButton
+            // 
+            this.reloadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.reloadButton.Image = ((System.Drawing.Image)(resources.GetObject("reloadButton.Image")));
+            this.reloadButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.reloadButton.Name = "reloadButton";
+            this.reloadButton.Size = new System.Drawing.Size(36, 22);
+            this.reloadButton.Text = "刷新";
+            this.reloadButton.Click += new System.EventHandler(this.ReloadButton_Click);
             // 
             // menuStrip1
             // 
@@ -193,15 +207,21 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
             // 
-            // reloadButton
+            // NewWindowCtrl
             // 
-            this.reloadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.reloadButton.Image = ((System.Drawing.Image)(resources.GetObject("reloadButton.Image")));
-            this.reloadButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.reloadButton.Name = "reloadButton";
-            this.reloadButton.Size = new System.Drawing.Size(36, 22);
-            this.reloadButton.Text = "刷新";
-            this.reloadButton.Click += new System.EventHandler(this.ReloadButton_Click);
+            this.NewWindowCtrl.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.NewWindowCtrl.Image = ((System.Drawing.Image)(resources.GetObject("NewWindowCtrl.Image")));
+            this.NewWindowCtrl.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NewWindowCtrl.Name = "NewWindowCtrl";
+            this.NewWindowCtrl.Size = new System.Drawing.Size(72, 22);
+            this.NewWindowCtrl.Text = "新窗口打开";
+            this.NewWindowCtrl.ToolTipText = "新窗口打开";
+            this.NewWindowCtrl.Click += new System.EventHandler(this.NewWindowCtrl_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // BrowserForm
             // 
@@ -214,6 +234,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "BrowserForm";
             this.Text = "BrowserForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.toolStripContainer.ContentPanel.ResumeLayout(false);
             this.toolStripContainer.ContentPanel.PerformLayout();
             this.toolStripContainer.TopToolStripPanel.ResumeLayout(false);
@@ -245,5 +266,7 @@
         private System.Windows.Forms.ToolStripButton backButton;
         private System.Windows.Forms.ToolStripButton forwardButton;
         private System.Windows.Forms.ToolStripButton reloadButton;
+        private System.Windows.Forms.ToolStripButton NewWindowCtrl;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

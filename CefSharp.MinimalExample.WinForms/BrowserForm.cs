@@ -18,7 +18,7 @@ namespace CefSharp.MinimalExample.WinForms
 
         private bool page_isloading = true;
         private int kami_index = 0;
-
+        private int success_count = 0;
 
         public BrowserForm()
         {
@@ -39,7 +39,7 @@ namespace CefSharp.MinimalExample.WinForms
             browser.StatusMessage += OnBrowserStatusMessage;
             browser.TitleChanged += OnBrowserTitleChanged;
             browser.AddressChanged += OnBrowserAddressChanged;
-            browser.LifeSpanHandler = new OpenPageSelf();
+            browser.LifeSpanHandler = new OpenPageSelf(this);
             //browser.DocumentCompleted += OnDocumentCompleted;
 
             var bitness = Environment.Is64BitProcess ? "x64" : "x86";
@@ -192,6 +192,13 @@ namespace CefSharp.MinimalExample.WinForms
         //打开新窗口处理
         internal class OpenPageSelf : ILifeSpanHandler
         {
+            BrowserForm m_form = null;
+
+            public OpenPageSelf(BrowserForm form)
+            {
+                m_form = form;
+            }
+
             public bool DoClose(IWebBrowser browserControl, IBrowser browser)
             {
                 return false;
@@ -212,9 +219,14 @@ namespace CefSharp.MinimalExample.WinForms
                         IWindowInfo windowInfo, IBrowserSettings browserSettings, ref bool noJavascriptAccess, out IWebBrowser newBrowser)
             {
                 newBrowser = null;
-                var chromiumWebBrowser = (ChromiumWebBrowser)browserControl;
-                chromiumWebBrowser.Load(targetUrl);
-                return true; //Return true to cancel the popup creation copyright by codebye.com.
+                if (m_form.NewWindowCtrl.Checked)
+                    return false;
+                else
+                {
+                    var chromiumWebBrowser = (ChromiumWebBrowser)browserControl;
+                    chromiumWebBrowser.Load(targetUrl);
+                    return true; //Return true to cancel the popup creation copyright by codebye.com.
+                }
             }
         }
 
@@ -410,6 +422,7 @@ namespace CefSharp.MinimalExample.WinForms
 
             //初始化
             kami_index = 0;
+            success_count = 0;
             GangBengBangDing(kami_index);
         }
 
@@ -434,7 +447,10 @@ namespace CefSharp.MinimalExample.WinForms
                 if (msg.IndexOf("已绑定") != -1)
                     text = richTextBoxKaimi.Lines[index] += " 失败:卡密已绑定"; // + msg.Substring(7,19);  //修改此行文本
                 else if(msg.IndexOf("实际到账") != -1)
-                    text = richTextBoxKaimi.Lines[index] += (" 成功:"+ msg.Substring(msg.Length-6,6));
+                {
+                    success_count++;
+                    text = richTextBoxKaimi.Lines[index] += (" 成功:" + success_count.ToString() + "|" + msg.Substring(msg.Length - 6, 6));
+                }
                 else if (msg.IndexOf("卡密无效") != -1)
                     text = richTextBoxKaimi.Lines[index] += " 失败:卡密无效";
                 else
@@ -446,6 +462,18 @@ namespace CefSharp.MinimalExample.WinForms
 
                 richTextBoxKaimi.Update();
             }
+        }
+
+
+        private void MainFormClosing(object sender, FormClosingEventArgs e)
+        {
+            //关闭软件 删除Cookies
+            Cef.GetGlobalCookieManager().DeleteCookies();
+        }
+
+        private void NewWindowCtrl_Click(object sender, EventArgs e)
+        {
+            NewWindowCtrl.Checked = !NewWindowCtrl.Checked;
         }
     }
 }
