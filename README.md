@@ -1,12 +1,19 @@
-CefSharp.MinimalExample
-=======================
+*****************郑重声明：*****************
+1、请保存好自己的账号密码信息;
+2、本软件不记录任何密码信息;
+3、本软件只是模拟点击按钮，不使用和利用任何的bug;
+4、本软件免费使用，只供交流学习之用，不得用于商业用途。
 
-Minimal example of how the CefSharp library can be used using the official `Nuget` packages. 
+*****************使用方法*****************
+1、安装微软Net4.6.1运行库，直接运行NDP461-KB3102438-Web.exe完成就可以了
+2、运行钢蹦.exe/铜板.exe
+3、登录（推荐扫描登陆）
+4、复制卡密到TXET输入框  
+     卡密 3种格式
+      1、3B8B-CFA6-632C-701C
+      2、卡号：8992-4276-1CBA-3848
+      3、820G0H090MY8D6AD
+5、点击绑定按钮
 
-Includes examples for
-- WinForms
-- WPF
-- OffScreen
- 
 
-For a more complete example of each project see the main `CefSharp` repository.
+百度网盘链接:https://pan.baidu.com/s/1RbRGwrOJDAIL6KS0lTN4BA 提取码:1b6s 
