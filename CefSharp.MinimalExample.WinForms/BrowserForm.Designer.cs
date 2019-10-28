@@ -38,13 +38,13 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.backButton = new System.Windows.Forms.ToolStripButton();
             this.forwardButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.reloadButton = new System.Windows.Forms.ToolStripButton();
+            this.NewWindowCtrl = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showDevToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.NewWindowCtrl = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
@@ -164,6 +164,11 @@
             this.forwardButton.Text = "Forward";
             this.forwardButton.Click += new System.EventHandler(this.ForwardButtonClick);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // reloadButton
             // 
             this.reloadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -173,6 +178,17 @@
             this.reloadButton.Size = new System.Drawing.Size(36, 22);
             this.reloadButton.Text = "刷新";
             this.reloadButton.Click += new System.EventHandler(this.ReloadButton_Click);
+            // 
+            // NewWindowCtrl
+            // 
+            this.NewWindowCtrl.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.NewWindowCtrl.Image = ((System.Drawing.Image)(resources.GetObject("NewWindowCtrl.Image")));
+            this.NewWindowCtrl.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NewWindowCtrl.Name = "NewWindowCtrl";
+            this.NewWindowCtrl.Size = new System.Drawing.Size(72, 22);
+            this.NewWindowCtrl.Text = "新窗口打开";
+            this.NewWindowCtrl.ToolTipText = "新窗口打开";
+            this.NewWindowCtrl.Click += new System.EventHandler(this.NewWindowCtrl_Click);
             // 
             // menuStrip1
             // 
@@ -206,22 +222,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
-            // 
-            // NewWindowCtrl
-            // 
-            this.NewWindowCtrl.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.NewWindowCtrl.Image = ((System.Drawing.Image)(resources.GetObject("NewWindowCtrl.Image")));
-            this.NewWindowCtrl.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NewWindowCtrl.Name = "NewWindowCtrl";
-            this.NewWindowCtrl.Size = new System.Drawing.Size(72, 22);
-            this.NewWindowCtrl.Text = "新窗口打开";
-            this.NewWindowCtrl.ToolTipText = "新窗口打开";
-            this.NewWindowCtrl.Click += new System.EventHandler(this.NewWindowCtrl_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // BrowserForm
             // 

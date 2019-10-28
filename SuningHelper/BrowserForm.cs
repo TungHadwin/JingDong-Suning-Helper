@@ -39,7 +39,7 @@ namespace SuningHelper
             browser.StatusMessage += OnBrowserStatusMessage;
             browser.TitleChanged += OnBrowserTitleChanged;
             browser.AddressChanged += OnBrowserAddressChanged;
-            browser.LifeSpanHandler = new OpenPageSelf();
+            browser.LifeSpanHandler = new OpenPageSelf(this);
             //browser.DocumentCompleted += OnDocumentCompleted;
 
             var bitness = Environment.Is64BitProcess ? "x64" : "x86";
@@ -191,6 +191,13 @@ namespace SuningHelper
         //打开新窗口处理
         internal class OpenPageSelf : ILifeSpanHandler
         {
+            BrowserForm m_form = null;
+
+            public OpenPageSelf(BrowserForm form)
+            {
+                m_form = form;
+            }
+
             public bool DoClose(IWebBrowser browserControl, IBrowser browser)
             {
                 return false;
@@ -211,12 +218,16 @@ namespace SuningHelper
                         IWindowInfo windowInfo, IBrowserSettings browserSettings, ref bool noJavascriptAccess, out IWebBrowser newBrowser)
             {
                 newBrowser = null;
-                var chromiumWebBrowser = (ChromiumWebBrowser)browserControl;
-                chromiumWebBrowser.Load(targetUrl);
-                return true; //Return true to cancel the popup creation copyright by codebye.com.
+                if (m_form.NewWindowCtrl.Checked)
+                    return false;
+                else
+                {
+                    var chromiumWebBrowser = (ChromiumWebBrowser)browserControl;
+                    chromiumWebBrowser.Load(targetUrl);
+                    return true; //Return true to cancel the popup creation copyright by codebye.com.
+                }
             }
         }
-
         //显示调试信息
         static void ShowLabel(string msg)
         {
@@ -424,6 +435,11 @@ namespace SuningHelper
 
                 richTextBoxKaimi.Update();
             }
+        }
+
+        private void NewWindowCtrl_Click(object sender, EventArgs e)
+        {
+            NewWindowCtrl.Checked = !NewWindowCtrl.Checked;
         }
     }
 }
